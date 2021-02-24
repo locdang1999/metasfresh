@@ -77,6 +77,7 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         include: path.join(__dirname, 'src'),
+        options: { babelrcRoots: ['.'] },
       },
       {
         test: /\.(jpg|png|svg|eot|woff|woff2|ttf|gif)$/,
