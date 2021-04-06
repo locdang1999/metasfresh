@@ -3,6 +3,7 @@ package de.metas;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.NonNull;
 import org.adempiere.ad.service.ISystemBL;
 import org.compiere.Adempiere;
 import org.compiere.model.I_AD_System;
@@ -43,15 +44,15 @@ public class MetasInfoContributor implements InfoContributor
 	private static final Logger logger = LogManager.getLogger(MetasInfoContributor.class);
 
 	@Override
-	public void contribute(final Info.Builder builder)
+	public void contribute(@NonNull final Info.Builder builder)
 	{
 		builder.withDetail("AD_System", retrieveADSystemInfo());
 	}
 
 	/**
-	 * @task https://github.com/metasfresh/metasfresh/issues/2601
+	 * task https://github.com/metasfresh/metasfresh/issues/2601
 	 */
-	private static final Map<String, String> retrieveADSystemInfo()
+	private static Map<String, String> retrieveADSystemInfo()
 	{
 		final Map<String, String> adSystemInfo = new HashMap<>();
 		try
