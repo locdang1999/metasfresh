@@ -25,7 +25,6 @@ package de.metas.cucumber.stepdefs;
 import de.metas.common.rest_api.v2.SyncAdvise;
 import de.metas.common.util.CoalesceUtil;
 import de.metas.common.util.EmptyUtil;
-import de.metas.organization.OrgId;
 import de.metas.security.IRoleDAO;
 import de.metas.security.Role;
 import de.metas.user.UserId;
@@ -78,11 +77,11 @@ public class RESTUtil
 		final I_AD_User_AuthToken userAuthTokenRecord = InterfaceWrapperHelper.newInstanceOutOfTrx(I_AD_User_AuthToken.class);
 		userAuthTokenRecord.setAD_User_ID(userId.getRepoId());
 		userAuthTokenRecord.setAD_Role_ID(role.getId().getRepoId());
-		userAuthTokenRecord.setAD_Org_ID(1000000);
+		userAuthTokenRecord.setAD_Org_ID(StepDefConstants.ORG_ID.getRepoId());
 		InterfaceWrapperHelper.saveRecord(userAuthTokenRecord);
 
 		Env.setLoggedUserId(Env.getCtx(), userId);
-		Env.setOrgId(Env.getCtx(), OrgId.ofRepoId(1000000));
+		Env.setOrgId(Env.getCtx(), StepDefConstants.ORG_ID);
 
 		return userAuthTokenRecord.getAuthToken();
 	}

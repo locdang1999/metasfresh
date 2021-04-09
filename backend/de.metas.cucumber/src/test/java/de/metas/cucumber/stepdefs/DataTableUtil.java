@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -185,6 +186,21 @@ public class DataTableUtil
 		try
 		{
 			return TimeUtil.parseTimestamp(string);
+		}
+		catch (final DateTimeParseException e)
+		{
+			throw new AdempiereException("Can't parse value=" + string + " of columnName=" + columnName, e).appendParametersToMessage()
+					.setParameter("dataTableRow", dataTableRow);
+		}
+	}
+
+	@Nullable
+	public static LocalDate extractLocalDateOrNullForColumnName(final Map<String, String> dataTableRow, final String columnName)
+	{
+		final String string = extractStringForColumnName(dataTableRow, columnName);
+		try
+		{
+			return TimeUtil.asLocalDate(string);
 		}
 		catch (final DateTimeParseException e)
 		{

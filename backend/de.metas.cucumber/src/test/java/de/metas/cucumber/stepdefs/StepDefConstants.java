@@ -26,6 +26,7 @@ import de.metas.contracts.FlatrateTransitionId;
 import de.metas.location.CountryId;
 import de.metas.organization.OrgId;
 import de.metas.product.ProductCategoryId;
+import de.metas.tax.api.TaxCategoryId;
 import de.metas.uom.UomId;
 import org.adempiere.warehouse.WarehouseId;
 
@@ -39,4 +40,5 @@ public class StepDefConstants
 	public static final FlatrateTransitionId FLATRATE_TRANSITION_ID = FlatrateTransitionId.ofRepoId(1000003);
 	public static final ProductCategoryId PRODUCT_CATEGORY_STANDARD_ID = ProductCategoryId.ofRepoId(1000000);
 	public static final UomId PCE_UOM_ID = UomId.ofRepoId(100);
+	public static final TaxCategoryId TAX_CATEGORY_ID_NORMAL = TaxCategoryId.ofRepoId(1000009);
 }

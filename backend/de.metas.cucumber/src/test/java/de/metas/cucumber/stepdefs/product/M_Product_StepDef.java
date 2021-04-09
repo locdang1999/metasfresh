@@ -20,7 +20,7 @@
  * #L%
  */
 
-package de.metas.cucumber.stepdefs.pricing;
+package de.metas.cucumber.stepdefs.product;
 
 import de.metas.cucumber.stepdefs.StepDefConstants;
 import de.metas.product.ProductCategoryId;
