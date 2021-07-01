@@ -36,6 +36,9 @@ import nextTabbable from './nextTabbable';
 import { humanReadableNow } from '../utils/utils';
 import { RewriteURL } from '../utils/constants';
 
+let loginRetries = 0;
+const MAX_LOGIN_RETRIES = 3;
+
 context('Reusable "login" custom command using API', function () {
   Cypress.Commands.add('loginViaAPI', (username, password, redirect) => {
     let user = username;
@@ -70,8 +73,16 @@ context('Reusable "login" custom command using API', function () {
           followRedirect: false,
         })
         .then((response) => {
-          if (!response.body.error) {
+          if (response.body && !response.body.error) {
+            loginRetries = 0;
             return Cypress.reduxStore.dispatch(push('/'));
+          }
+
+          if (!response.body) {
+            loginRetries += 1;
+            cy.log(`Login failed because we got response: ${response.body}`);
+            if (loginRetries === MAX_LOGIN_RETRIES) cy.loginViaAPI();
+            return false;
           }
 
           cy.log(`Login failed because ${error}`);
