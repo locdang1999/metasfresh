@@ -37,7 +37,7 @@ import { humanReadableNow } from '../utils/utils';
 import { RewriteURL } from '../utils/constants';
 
 let loginRetries = 0;
-const MAX_LOGIN_RETRIES = 3;
+const MAX_LOGIN_RETRIES = 4;
 
 context('Reusable "login" custom command using API', function () {
   Cypress.Commands.add('loginViaAPI', (username, password, redirect) => {
