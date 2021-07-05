@@ -81,8 +81,8 @@ context('Reusable "login" custom command using API', function () {
           if (!response.body) {
             loginRetries += 1;
             cy.log(`Login failed because we got response: ${response.body}`);
-            if (loginRetries === MAX_LOGIN_RETRIES) cy.loginViaAPI();
-            return false;
+            if (loginRetries < MAX_LOGIN_RETRIES) return loginAuthenticate(user, pass);
+            return Promise.reject(`${response.body}`);
           }
 
           cy.log(`Login failed because ${error}`);
@@ -98,40 +98,44 @@ context('Reusable "login" custom command using API', function () {
 
     cy.visit('/login');
 
-    return cy
-      .request({
-        method: 'POST',
-        url: config.API_URL + '/login/authenticate',
-        failOnStatusCode: false,
-        followRedirect: false,
-        body: {
-          username: user,
-          password: pass,
-        },
-      })
-      .then((response) => {
-        if (!response.isOkStatusCode) {
-          return checkIfAlreadyLogged();
-        }
+    const loginAuthenticate = (user, pass) => {
+      return cy
+        .request({
+          method: 'POST',
+          url: config.API_URL + '/login/authenticate',
+          failOnStatusCode: false,
+          followRedirect: false,
+          body: {
+            username: user,
+            password: pass,
+          },
+        })
+        .then((response) => {
+          if (!response.isOkStatusCode) {
+            return checkIfAlreadyLogged();
+          }
 
-        if (response.body.loginComplete) {
-          return handleSuccess();
-        }
-        const roles = List(response.body.roles);
+          if (response.body.loginComplete) {
+            return handleSuccess();
+          }
+          const roles = List(response.body.roles);
 
-        return cy
-          .request({
-            method: 'POST',
-            url: config.API_URL + '/login/loginComplete',
-            body: roles.get(0),
-            failOnStatusCode: false,
-          })
-          .then(() => {
-            Cypress.reduxStore.dispatch(loginSuccess(auth));
+          return cy
+            .request({
+              method: 'POST',
+              url: config.API_URL + '/login/loginComplete',
+              body: roles.get(0),
+              failOnStatusCode: false,
+            })
+            .then(() => {
+              Cypress.reduxStore.dispatch(loginSuccess(auth));
 
-            handleSuccess();
-          });
-      });
+              handleSuccess();
+            });
+        });
+    };
+
+    return loginAuthenticate(user, pass);
   });
 });
 
