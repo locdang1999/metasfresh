@@ -63,7 +63,7 @@ context('Reusable "login" custom command using API', function () {
     };
 
     const checkIfAlreadyLogged = function () {
-      const error = new Error('Error when checking if user logged in');
+      const error = 'Error when checking if user logged in';
 
       return cy
         .request({
@@ -85,7 +85,7 @@ context('Reusable "login" custom command using API', function () {
             return Promise.reject(`${response.body}`);
           }
 
-          cy.log(`Login failed because ${error}`);
+          cy.log(`Login failed because : ${error} `);
           return Promise.reject(error);
         });
     };
@@ -111,6 +111,13 @@ context('Reusable "login" custom command using API', function () {
           },
         })
         .then((response) => {
+          if (response.status === 401) {
+            loginRetries += 1;
+            if (loginRetries < MAX_LOGIN_RETRIES) {
+              cy.visit('/login');
+              return loginAuthenticate(user, pass);
+            }
+          }
           if (!response.isOkStatusCode) {
             return checkIfAlreadyLogged();
           }
