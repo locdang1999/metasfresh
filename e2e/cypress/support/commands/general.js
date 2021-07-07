@@ -98,51 +98,41 @@ context('Reusable "login" custom command using API', function () {
 
     cy.visit('/login');
 
-    const loginAuthenticate = (user, pass) => {
-      return cy
-        .request({
-          method: 'POST',
-          url: config.API_URL + '/login/authenticate',
-          failOnStatusCode: false,
-          followRedirect: false,
-          body: {
-            username: user,
-            password: pass,
-          },
-        })
-        .then((response) => {
-          if (response.status === 401) {
-            loginRetries += 1;
-            if (loginRetries < MAX_LOGIN_RETRIES) {
-              cy.visit('/login');
-              return loginAuthenticate(user, pass);
-            }
-          }
-          if (!response.isOkStatusCode) {
-            return checkIfAlreadyLogged();
-          }
+    return cy
+      .request({
+        method: 'POST',
+        url: config.API_URL + '/login/authenticate1',
+        failOnStatusCode: false,
+        followRedirect: false,
+        body: {
+          username: user,
+          password: pass,
+        },
+      })
+      .then(response => {
+        console.log('R:', response);
+        if (!response.isOkStatusCode) {
+          return checkIfAlreadyLogged();
+        }
 
-          if (response.body.loginComplete) {
-            return handleSuccess();
-          }
-          const roles = List(response.body.roles);
+        if (response.body.loginComplete) {
+          return handleSuccess();
+        }
+        const roles = List(response.body.roles);
 
-          return cy
-            .request({
-              method: 'POST',
-              url: config.API_URL + '/login/loginComplete',
-              body: roles.get(0),
-              failOnStatusCode: false,
-            })
-            .then(() => {
-              Cypress.reduxStore.dispatch(loginSuccess(auth));
+        return cy
+          .request({
+            method: 'POST',
+            url: config.API_URL + '/login/loginComplete',
+            body: roles.get(0),
+            failOnStatusCode: false,
+          })
+          .then(() => {
+            Cypress.reduxStore.dispatch(loginSuccess(auth));
 
-              handleSuccess();
-            });
-        });
-    };
-
-    return loginAuthenticate(user, pass);
+            handleSuccess();
+          });
+      });
   });
 });
 
