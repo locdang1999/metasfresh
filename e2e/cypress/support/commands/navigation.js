@@ -212,26 +212,15 @@ Cypress.Commands.add('selectRowByColumnAndValue', (columnAndValue, modal = false
  */
 Cypress.Commands.add('selectItemUsingBarcodeFilter', (columnAndValue, modal = false, force = false) => {
   cy.log(`Select HU using BarcodeFilter by ${JSON.stringify(columnAndValue)}`);
-
-  const barcodeFilterIdentifier = 'barcode';
-  let barcodeFilterPath = `.filter-option-${barcodeFilterIdentifier}`; // todo @petrica: this should use a data-cy attribute. each filter is sent by backed with a unique identifier. after that is done, it can be inlined.
-  let filtersPath = '.filters-not-frequent';
+  cy.log(`Running selectItemUsingBarcodeFilter in modal: ${modal}`);
 
   const timeout = { timeout: 10000 };
-
-  if (modal) {
-    filtersPath = '.modal-content-wrapper ' + filtersPath;
-  }
 
   if (!force) {
     cy.waitForSaveIndicator();
   }
 
-  cy.get(filtersPath, timeout)
-    .click()
-    .within(() => {
-      cy.get(barcodeFilterPath).click();
-    });
+  cy.get(':nth-child(3) > .filter-wrapper > .btn', timeout).click();
 
   const filterAlias = 'filter_' + humanReadableNow();
   cy.server();
