@@ -192,7 +192,7 @@ export class ProductCategory {
     cy.visitWindow('144', 'NEW');
     cy.writeIntoStringField('Name', productCategory.name);
 
-    cy.writeIntoStringField('Value', productCategory.name + Math.random().toString(36).substring(7));
+    cy.writeIntoStringField('Value', productCategory.name + '_value');
     if (productCategory.attributeSet) {
       cy.selectInListField('M_AttributeSet_ID', productCategory.attributeSet);
     }
